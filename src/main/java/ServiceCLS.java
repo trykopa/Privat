@@ -1,4 +1,9 @@
 import com.jayway.jsonpath.JsonPath;
+//import org.joda.time.format.DateTimeFormat;
+//import org.joda.time.format.DateTimeFormatter;
+
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,7 +12,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+//import java.time.LocalDate;
+//import java.util.Date;
 
 
 public class ServiceCLS {
@@ -40,6 +49,7 @@ public class ServiceCLS {
                     }
                     br.close();
                     tmpResp = sb.toString();
+                    System.out.println(tmpResp);
             }
 
         } catch (ProtocolException e) {
@@ -56,7 +66,7 @@ public class ServiceCLS {
 
     public String dateString(LocalDate date){
         int year = date.getYear();
-        int curentMonth = date.getMonthValue();
+        int curentMonth = date.getMonthOfYear();
         int dayOfMonth = date.getDayOfMonth();
         String day = "";
         String month = "";
@@ -70,11 +80,27 @@ public class ServiceCLS {
         return currentDate;
     }
 
-    public ExRateBean extractBeanFromJSON(String input){
-        String data = JsonPath.read(input, "$.pageInfo.pageName");
-        float purchaserate = JsonPath.read(input, "$.pageInfo.pagePic");
-        float salerate = JsonPath.read(input, "$.pagePosts[0].post_id");
+    public String formatAndReturnDate (String dateValue) throws ParseException {
 
+        Date dateObj = new SimpleDateFormat("yyyy-MM-dd").parse(dateValue);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        String parsedDate = formatter.format(dateObj);
+
+        return parsedDate;
+    }
+
+    public LocalDate stringToLocalDate (String date) throws ParseException {
+        return LocalDate.parse(date, DateTimeFormat.forPattern("dd.MM.yyyy"));
+    }
+
+
+
+    public ExRateBean extractBeanFromJSON(String input){
+        String data = JsonPath.read(input, "$..date").toString().replaceAll("[\\[\\](){} \"]","");
+        float purchaserate = Float.valueOf(JsonPath.read(input, "$..exchangeRate[?(@.currency == \"USD\")].saleRate")
+                .toString().replaceAll("[\\[\\](){}]",""));
+        float salerate = Float.valueOf(JsonPath.read(input, "$..exchangeRate[?(@.currency == \"USD\")].purchaseRate")
+                .toString().replaceAll("[\\[\\](){}]",""));
         return new ExRateBean(data, purchaserate, salerate);
     }
 

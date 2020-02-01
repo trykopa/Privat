@@ -11,42 +11,70 @@
 </head>
 <body>
 <div style="text-align: center;">
-    <h1>Privat API Test</h1>
-    <h3>
-        <a href="new">Search ExRate by date</a>
-        &nbsp;&nbsp;&nbsp;
-        <a href="list">Get average rate between two dates</a>
-
-    </h3>
+    <h2>Privat API Test</h2>
+    <br>
+    <h4>Поиск информации о курсе USD по дате или среднего значения по диапазону дат</h4>
 </div>
 
-<div class="container" align="center">
-    <table class="table table-bordered table-hover table-condensed" border="1" cellpadding="5">
-        <caption><h5>List of Users</h5></caption>
+
+<div class="container" align="center" style="width: 1000px;">
+    <table class="table table-bordered table-hover table-condensed" border="1" cellpadding="2">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Country</th>
-            <th scope="col">Actions</th>
+            <th scope="col">Поиск по дате</th>
+            <th scope="col" style="width: 250px;">Результат</th>
         </tr>
-        <c:forEach var="user" items="${listUser}">
+        </thead>
         <tr>
-            <td><c:out value="${user.id}" /></td>
-            <td><c:out value="${user.name}" /></td>
-            <td><c:out value="${user.email}" /></td>
-            <td><c:out value="${user.country}" /></td>
-            <td>
-                <a class="btn btn-primary" href="edit?id=<c:out value='${user.id}' />" role="button">Edit</a>
+            <th scope="col">
+                <form action = "controller" method="post">
+                    <label>Дата:
+                        <input type="date" name="date" required><br/>
+                    </label>
+                    <button type="submit" name="form" value="form1">Submit</button>
+                </form>
+            </th>
 
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <a class="btn btn-primary" href="delete?id=<c:out value='${user.id}' />">Delete</a>
-            </td>
-
-            </td>
+            <th scope="col">
+                <label> Стоимость покупки USD:
+                    <c:out value="${purchase}" /> <br/>
+                </label>
+                <br/>
+                <label> Стоимость продажи USD:
+                    <c:out value="${sale}" /><br/>
+                </label>
+            </th>
         </tr>
-        </c:forEach>
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Поиск по среднего по диапазону</th>
+            <th scope="col" >Результат</th>
+        </tr>
+        </thead>
+        <tr>
+            <th scope="col">
+                <form action = "controller" method="post">
+                    <label>Начальная дата:
+                        <input type="date" name="datestart" required><br />
+                    </label>
+                    <label>Конечная дата:
+                        <input type="date" name="dateend" required><br />
+                    </label>
+                    <button type="submit" name="form" value="form2">Submit</button>
+                </form>
+            </th>
+                <th>
+                    <label>
+                        Средняя стоиость за период <c:out value="${datestart}" /> - <c:out value="${dateend}" />
+                        <br>
+                    </label>
+                    <label>Средняя стоимость покупки USD: </label>
+                    <c:out value="${avpur}" /> <br>
+                    <label>Средняя стоимость продажи USD: </label>
+                    <c:out value="${avsale}" />
+                </th>
+             </tr>
+
     </table>
 </div>
 

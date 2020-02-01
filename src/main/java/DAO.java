@@ -3,13 +3,14 @@ import java.util.Optional;
 
 public interface DAO<T> {
 
-    Optional<T> get(long id);
+    ExRateBean get(long id);
 
-    List<T> getAll();
+    ExRateBean getByDate(String date);
 
-    void save(T t);
+    ExRateBean getLast();
 
-    void update(T t, String[] params);
+    List<ExRateBean> getAll();
 
-    void delete(T t);
+    void save(ExRateBean t);
+
 }
