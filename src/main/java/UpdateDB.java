@@ -9,11 +9,14 @@ public class UpdateDB {
 
         String myURL = "https://api.privatbank.ua/p24api/exchange_rates?json&date=";
         LocalDate now = LocalDate.now();
-        //LocalDate start = now.minusMonths(HISTORY_YEARS);
-
-        String last = dao.getLast().getDate();
-        System.out.println(last);
-        LocalDate start = sc.stringToLocalDate(last);
+        LocalDate start;
+        if(dao.getLast() == null){
+             start = now.minusMonths(HISTORY_YEARS);
+        } else {
+            String last = dao.getLast().getDate();
+            System.out.println(last);
+            start = sc.stringToLocalDate(last);
+        }
         for (LocalDate date = start.plusDays(1); date.isBefore(now.plusDays(1)); date = date.plusDays(1)) {
             String target = myURL + sc.dateString(date);
             String responce =  sc.getResponse(target);

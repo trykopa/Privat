@@ -22,12 +22,16 @@ public class ExRateBeanDAO implements DAO {
 
     @Override
     public ExRateBean getLast() {
-        long id = (Long) em.createQuery("SELECT max (c.id) from ExRateBean c")
-                .getSingleResult();
-        ExRateBean bean  = (ExRateBean) em.createQuery("SELECT c from ExRateBean c where c.id = ?1")
-                .setParameter(1, id)
-                .getSingleResult();
-        return bean;
+        if (em.createQuery("SELECT c FROM ExRateBean c").getResultList().isEmpty()){
+            return null;
+        } else {
+            long id = (Long) em.createQuery("SELECT max (c.id) from ExRateBean c")
+                    .getSingleResult();
+            ExRateBean bean = (ExRateBean) em.createQuery("SELECT c from ExRateBean c where c.id = ?1")
+                    .setParameter(1, id)
+                    .getSingleResult();
+            return bean;
+        }
     }
 
 
